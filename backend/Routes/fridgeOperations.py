@@ -39,7 +39,7 @@ def addFridge():
     for item in newItems:
         expiryDate = 10
         
-        expiryTime = foodCollection.find_one({"name": item["name"] + ":"})
+        expiryTime = foodCollection.find_one({"name": item["name"]})
         
         foodExpiry = 0
         if expiryTime == None:
@@ -59,9 +59,10 @@ def addFridge():
           )
 
           foodName = completion.choices[0].message.content.split(' ')[0]
-        
+          print(completion.choices[0].message.content)
+          
           if foodCollection.find_one({"name": foodName}) == None:
-            numberDate = completion.choices[0].message.content.split(' ')[-2].split("-")[0]
+            numberDate = completion.choices[0].message.content.split(' ')[-2].split("-")[-1]
             dateUnit = completion.choices[0].message.content.split(' ')[-1]
             if 'week' in dateUnit or 'Week' in dateUnit:
                numberDate = str(int(numberDate) * 7)
@@ -70,7 +71,7 @@ def addFridge():
             elif 'year' in dateUnit or 'Year' in dateUnit:
                numberDate = str(int(numberDate) * 365) 
 
-            foodCollection.insert_one({"name": foodName, "expiryTime": numberDate})
+            foodCollection.insert_one({"name": foodName.replace(':', ''), "expiryTime": numberDate})
             print(numberDate)
             foodExpiry = int(numberDate)
         else:
