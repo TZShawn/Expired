@@ -10,7 +10,7 @@ export const fridgeApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: URL }),
   endpoints: (builder) => ({
     getPokemonByName: builder.query<any, string>({
-      query: (name) => `pokemon/${name}`,
+      query: (name) => `getuser/${name}`,
     }),
   }),
 })
