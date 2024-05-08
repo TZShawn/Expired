@@ -1,13 +1,15 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { Pokemon } from './types'
+
+
+const URL: string = "http://127.0.0.1:5000/"
 
 // Define a service using a base URL and expected endpoints
-export const pokemonApi = createApi({
-  reducerPath: 'pokemonApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
+export const fridgeApi = createApi({
+  reducerPath: 'fridgeApi',
+  baseQuery: fetchBaseQuery({ baseUrl: URL }),
   endpoints: (builder) => ({
-    getPokemonByName: builder.query<Pokemon, string>({
+    getPokemonByName: builder.query<any, string>({
       query: (name) => `pokemon/${name}`,
     }),
   }),
@@ -15,4 +17,4 @@ export const pokemonApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetPokemonByNameQuery } = pokemonApi
+export const { useGetPokemonByNameQuery } = fridgeApi
