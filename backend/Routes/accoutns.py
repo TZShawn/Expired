@@ -30,6 +30,23 @@ def signup():
 
   return {"message": res}
 
+@accounts_bp.route('/getuser')
+def getAccount():
+
+  body = request.args.get('username')
+  print(body)
+
+  query = {'username': body}
+  
+  db = client['ExpiredDB']
+  collection = db['Accounts']
+  print(query)
+  document = collection.find_one(query)
+  print(document)
+  document['_id'] = str(document['_id'])
+
+  return document
+
 @accounts_bp.route('/signin')
 def signin():
 
