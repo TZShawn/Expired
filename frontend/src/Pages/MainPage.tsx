@@ -1,4 +1,6 @@
 import React from "react";
+import { Select } from "antd";
+
 import ReactECharts from 'echarts-for-react';
 
 const MainPage: React.FC<{}> = ({}) => {
@@ -30,7 +32,7 @@ const MainPage: React.FC<{}> = ({}) => {
     ],
   };
   return (
-    <div className="w-screen h-screen bg-red-400">
+    <div className="w-screen h-screen">
       <div className="flex w-screen border border-0 border-b-4">
         <div>AAAA</div>
         <div className="flex-1"></div>
@@ -43,15 +45,18 @@ const MainPage: React.FC<{}> = ({}) => {
         </div>
       </div>
 
-      <div className="m-4 h-[90%] bg-green-300">
-        <div className="w-full h-1/3 bg-blue-100 border border-b-2 flex">
-          <div className="w-1/3 -mt-8"><ReactECharts className="w-2/3" option={options} /></div>
-          <div className="w-2/3 bg-red-400">
-            <div></div>
+      <div className="mx-16 my-4 h-fill">
+        <div className="w-full h-1/3 border border-b-2 flex">
+          <div className="w-1/3 border border-2"><ReactECharts className="w-2/3" option={options} /></div>
+          <div className="w-2/3 flex">
+            <div className="w-full">
+              <Select className="w-1/3" showSearch/>
+
+            </div>
           </div>
         </div>
 
-        <div className="w-full h-2/3 bg-orange-200"></div>
+        <div className="w-full min-h-[50%] bg-orange-200"></div>
       </div>
     </div>
   );
