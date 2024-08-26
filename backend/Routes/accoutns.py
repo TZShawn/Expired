@@ -32,7 +32,6 @@ def signup():
 
 @accounts_bp.route('/getuser')
 def getAccount():
-
   body = request.args.get('username')
   print(body)
 

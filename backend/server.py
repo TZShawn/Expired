@@ -1,9 +1,11 @@
 from flask import Flask, request
 from Routes.accoutns import accounts_bp
 from Routes.fridgeOperations import fridge_bp
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(accounts_bp)
 app.register_blueprint(fridge_bp)
 

@@ -9,12 +9,12 @@ export const fridgeApi = createApi({
   reducerPath: 'fridgeApi',
   baseQuery: fetchBaseQuery({ baseUrl: URL }),
   endpoints: (builder) => ({
-    getPokemonByName: builder.query<any, string>({
-      query: (name) => `getuser/${name}`,
+    getFridgeData: builder.query<any, string>({
+      query: (name) => `getuser?username=${name}`,
     }),
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetPokemonByNameQuery } = fridgeApi
+export const { useGetFridgeDataQuery } = fridgeApi

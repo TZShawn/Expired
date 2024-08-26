@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Select } from "antd";
 
-import ReactECharts from 'echarts-for-react';
+import ReactECharts from "echarts-for-react";
+import FridgeItem from "../Components/FridgeItem";
+import { useNavigate } from "react-router-dom";
+import { useGetFridgeDataQuery } from "src/Services/fridge";
 
 const MainPage: React.FC<{}> = ({}) => {
+
+  const [newGroceries, setNewGroceries] = useState<string>("")
+
+  const userId = 'shank'
+
+  const { data, isFetching } = useGetFridgeDataQuery(userId)
+
+
+  const navigate = useNavigate()
+
   const options = {
     tooltip: {
       trigger: "item",
@@ -32,31 +45,39 @@ const MainPage: React.FC<{}> = ({}) => {
     ],
   };
   return (
-    <div className="w-screen h-screen">
-      <div className="flex w-screen border border-0 border-b-4">
+    <div className="w-screen h-screen overflow-hidden">
+      <div className="flex w-screen border-b-4">
         <div>AAAA</div>
         <div className="flex-1"></div>
         <div className="bg-blue-100 px-4 py-3 border border-gray-400">Home</div>
-        <div className="bg-blue-100 px-2 py-3 border border-gray-400">
+        <div onClick={(e) => navigate('/account')} className="bg-blue-100 px-2 py-3 border border-gray-400">
           Account
-        </div>
-        <div className="bg-blue-100 px-2 py-3 border border-gray-400">
-          Recipes
         </div>
       </div>
 
-      <div className="mx-16 my-4 h-fill">
-        <div className="w-full h-1/3 border border-b-2 flex">
-          <div className="w-1/3 border border-2"><ReactECharts className="w-2/3" option={options} /></div>
-          <div className="w-2/3 flex">
-            <div className="w-full">
-              <Select className="w-1/3" showSearch/>
-
-            </div>
+      <div className="mx-4 my-4 border border-b-2 flex">
+        <div className="w-1/3 border-2">
+          <ReactECharts className="w-2/3" option={options} />
+        </div>
+        <div className="w-1/3 h-full">
+          <div className="pt-2 text-lg font-bold">Recipes</div>
+          <div className="h-48 my-2 border-2">Recipes here</div>
+          <div className="flex w-full bg-red-500">
+            <div className="w-1/2 p-2 bg-green-400 text-center border-2">New List</div>
+            <div className="w-1/2 p-2 bg-green-400 text-center border-2">New Recipe</div>
           </div>
         </div>
+        <div className="w-1/3 h-full">
+          <div className="py-2 text-lg font-bold">Add new items sepereated by ','</div>
+          <textarea onChange={(e) => setNewGroceries(e.target.value)} className= "p-2 w-full h-48 border-2 border-gray-400" />
+          <div className="bg-gray-200 p-2 border-2 border-gray-400 text-center hover:cursor-pointer text-lg font-semibold">
+            Submit
+          </div>
+        </div>
+      </div>
 
-        <div className="w-full min-h-[50%] bg-orange-200"></div>
+      <div className="h-[50%] border border-gray-200 m-4 overflow-y-auto">
+        {!isFetching && data.fridge.map((item: any) => <FridgeItem name={item.name} expDate={item.expiry} />)}
       </div>
     </div>
   );
