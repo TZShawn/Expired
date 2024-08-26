@@ -4,7 +4,7 @@ import { Select } from "antd";
 import ReactECharts from "echarts-for-react";
 import FridgeItem from "../Components/FridgeItem";
 import { useNavigate } from "react-router-dom";
-import { useGetFridgeDataQuery } from "src/Services/fridge";
+import { useGetFridgeDataQuery, useUpdateUserFridgeMutation } from "src/Services/fridge";
 
 const MainPage: React.FC<{}> = ({}) => {
 
@@ -13,7 +13,7 @@ const MainPage: React.FC<{}> = ({}) => {
   const userId = 'shank'
 
   const { data, isFetching } = useGetFridgeDataQuery(userId)
-
+  const [updateUserFridge, {isLoading}] = useUpdateUserFridgeMutation()
 
   const navigate = useNavigate()
 
@@ -44,6 +44,15 @@ const MainPage: React.FC<{}> = ({}) => {
       },
     ],
   };
+
+  const HandleSubmitClick = () => {
+    const dateMapper = ["Janurary", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    
+    const date = new Date()
+    const formattedItems = newGroceries.split(',').map(item => {return {"name": item.trim(), "purchaseDate": "" + dateMapper[date.getMonth()] + "-" + date.getDate() + "-" + date.getFullYear()}})
+    updateUserFridge({"username": userId, "newItems": formattedItems})
+  }
+
   return (
     <div className="w-screen h-screen overflow-hidden">
       <div className="flex w-screen border-b-4">
@@ -70,7 +79,7 @@ const MainPage: React.FC<{}> = ({}) => {
         <div className="w-1/3 h-full">
           <div className="py-2 text-lg font-bold">Add new items sepereated by ','</div>
           <textarea onChange={(e) => setNewGroceries(e.target.value)} className= "p-2 w-full h-48 border-2 border-gray-400" />
-          <div className="bg-gray-200 p-2 border-2 border-gray-400 text-center hover:cursor-pointer text-lg font-semibold">
+          <div onClick={(e) => HandleSubmitClick()}className="bg-gray-200 p-2 border-2 border-gray-400 text-center hover:cursor-pointer text-lg font-semibold">
             Submit
           </div>
         </div>

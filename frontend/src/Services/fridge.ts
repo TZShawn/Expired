@@ -12,9 +12,19 @@ export const fridgeApi = createApi({
     getFridgeData: builder.query<any, string>({
       query: (name) => `getuser?username=${name}`,
     }),
+    updateUserFridge: builder.mutation<any, Record<string, any>>({
+      query: (items) => ({
+        url: 'addfridge',
+        method: 'POST',
+        body: {
+          "username": items.username,
+          "newItems": items.newItems
+        }
+      })
+    }),
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetFridgeDataQuery } = fridgeApi
+export const { useGetFridgeDataQuery, useUpdateUserFridgeMutation } = fridgeApi

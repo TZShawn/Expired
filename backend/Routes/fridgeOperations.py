@@ -33,11 +33,12 @@ def addFridge():
     userFridge = document["fridge"]
 
     newItems = body["newItems"]
+    print(newItems)
+
 
     openAIClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     for item in newItems:
-        expiryDate = 10
         
         expiryTime = foodCollection.find_one({"name": item["name"]})
         
@@ -84,8 +85,8 @@ def addFridge():
         userFridge.append(
             {
                 "name": item["name"],
-                "purchaseDate": datetime.strptime(item["purchaseDate"], "%b-%d-%Y"),
-                "expiry": datetime.strptime(item["purchaseDate"], "%b-%d-%Y") + timedelta(days=foodExpiry)
+                "purchaseDate": datetime.strptime(item["purchaseDate"], "%B-%d-%Y"),
+                "expiry": datetime.strptime(item["purchaseDate"], "%B-%d-%Y") + timedelta(days=foodExpiry)
             }
         )
 
