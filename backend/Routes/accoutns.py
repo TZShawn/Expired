@@ -65,5 +65,9 @@ def signin():
     return {'respose': 404, 'message': 'does not exist'}
 
   document['_id'] = str(document['_id'])
-
-  return document
+  
+  if (body["password"] != document['password']): 
+    return {"response": 400, 'message': 'Password incorrect'}
+  else:
+    return {'response': 200, 'message': 'Passoword Correct'}
+  

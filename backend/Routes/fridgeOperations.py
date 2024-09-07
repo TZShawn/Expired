@@ -1,5 +1,4 @@
 from json import dump
-import re
 from flask import Blueprint, jsonify, request
 
 from pymongo.mongo_client import MongoClient
@@ -107,7 +106,7 @@ def clearFridge():
     document = collection.find_one({"username": body["username"]})
     collection.update_one({"username": document["username"]}, {"$set": {"fridge": []}})
 
-    return {"response": 200}
+    return {"response": 200, 'message': 'Fridge Cleared'}
 
 
 # @fridge_bp.route("/removeItem", methods=["POST"])
