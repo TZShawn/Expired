@@ -5,6 +5,7 @@ import ReactECharts from "echarts-for-react";
 import FridgeItem from "../Components/FridgeItem";
 import { useNavigate } from "react-router-dom";
 import { useGetFridgeDataQuery, useUpdateUserFridgeMutation } from "src/Services/fridge";
+import { useGetNewRecipeMutation } from "src/Services/recipes";
 
 const MainPage: React.FC<{}> = ({}) => {
 
@@ -14,6 +15,7 @@ const MainPage: React.FC<{}> = ({}) => {
 
   const { data, isFetching } = useGetFridgeDataQuery(userId)
   const [updateUserFridge, {isLoading}] = useUpdateUserFridgeMutation()
+  const [getNewRecipe, {isLoading: newRecipeLoading} ] = useGetNewRecipeMutation()
 
   const navigate = useNavigate()
 
@@ -53,6 +55,10 @@ const MainPage: React.FC<{}> = ({}) => {
     updateUserFridge({"username": userId, "newItems": formattedItems})
   }
 
+  const handleNewRecipe = async () => {
+    const pow = await getNewRecipe("apple, carrots, orange, peas, steak").unwrap()
+  }
+
   return (
     <div className="w-screen h-screen overflow-hidden">
       <div className="flex w-screen border-b-4">
@@ -73,7 +79,7 @@ const MainPage: React.FC<{}> = ({}) => {
           <div className="h-48 my-2 border-2">Recipes here</div>
           <div className="flex w-full bg-red-500">
             <div className="w-1/2 p-2 bg-green-400 text-center border-2">New List</div>
-            <div className="w-1/2 p-2 bg-green-400 text-center border-2">New Recipe</div>
+            <div onClick={(e) => {handleNewRecipe()}} className="w-1/2 p-2 bg-green-400 text-center border-2">New Recipe</div>
           </div>
         </div>
         <div className="w-1/3 h-full">

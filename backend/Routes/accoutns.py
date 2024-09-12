@@ -23,10 +23,8 @@ def signup():
 
   db = client['ExpiredDB']
   collection = db['Accounts']
-  print(body)
-  res = str(collection.insert_one(body).inserted_id)
 
-  # print(result)
+  res = str(collection.insert_one(body).inserted_id)
 
   return {"message": res}
 

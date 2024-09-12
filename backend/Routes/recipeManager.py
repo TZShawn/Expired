@@ -20,7 +20,7 @@ client = MongoClient(uri, server_api=ServerApi("1"))
 recipe_bp = Blueprint("recipes", __name__)
 
 
-@recipe_bp.route("/generateRecipe", methods=["POST"])
+@recipe_bp.route("/generateRecipe", methods=['POST'])
 def addFridge():
     body = request.json
 
@@ -29,23 +29,24 @@ def addFridge():
 
     openAIClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    completion = openAIClient.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are to create a recipe with a given list of ingredients, things like seasoning can not be included in the given list but most of the ingredients" + 
-                "used should come from the given list of ingredients. You are to return the recipe in the form of an object with the following fields" +
-                "rceipe_name: <string>, ingredients: Array<string> of each ingredient as its own index, Cooking_Steps: Array<string> where each index is one step of the recipe",
-            },
-            {
-                "role": "user",
-                "content": body["ingredients"]
-            },
-        ],
-    )
+    # completion = openAIClient.chat.completions.create(
+    #     model="gpt-3.5-turbo",
+    #     messages=[
+    #         {
+    #             "role": "system",
+    #             "content": "You are to create a recipe with a given list of ingredients, things like seasoning can not be included in the given list but most of the ingredients" + 
+    #             "used should come from the given list of ingredients. You are to return the recipe in the form of an object with the following fields" +
+    #             "rceipe_name: <string>, ingredients: Array<string> of each ingredient as its own index, Cooking_Steps: Array<string> where each index is one step of the recipe",
+    #         },
+    #         {
+    #             "role": "user",
+    #             "content": body["ingredients"]
+    #         },
+    #     ],
+    # )
 
-    collection.insert_one(jsonify(completion.choices[0].message.content))
+    # # collection.insert_one(jsonify(completion.choices[0].message.content))
+    # print(completion.choices[0].message.content)
+    print("AAAAA")
 
-
-    return {"response": 200, "fridge": collection.
+    return {"response": 200, "fridge": "OK"}
