@@ -31,15 +31,12 @@ def signup():
 @accounts_bp.route('/getuser')
 def getAccount():
   body = request.args.get('username')
-  print(body)
 
   query = {'username': body}
   
   db = client['ExpiredDB']
   collection = db['Accounts']
-  print(query)
   document = collection.find_one(query)
-  print(document)
   document['_id'] = str(document['_id'])
 
   return document
@@ -48,7 +45,6 @@ def getAccount():
 def signin():
 
   body = request.args.get('username')
-  print(body)
   if body == None:
     return {'response': 404, 'message': 'no body specified'}
 

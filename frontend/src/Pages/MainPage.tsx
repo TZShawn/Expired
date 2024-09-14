@@ -5,7 +5,7 @@ import ReactECharts from "echarts-for-react";
 import FridgeItem from "../Components/FridgeItem";
 import { useNavigate } from "react-router-dom";
 import { useGetFridgeDataQuery, useUpdateUserFridgeMutation } from "src/Services/fridge";
-import { useGetNewRecipeMutation } from "src/Services/recipes";
+import { useGetNewRecipeMutation, useGetAllRecipesQuery } from "src/Services/recipes";
 
 const MainPage: React.FC<{}> = ({}) => {
 
@@ -16,6 +16,11 @@ const MainPage: React.FC<{}> = ({}) => {
   const { data, isFetching } = useGetFridgeDataQuery(userId)
   const [updateUserFridge, {isLoading}] = useUpdateUserFridgeMutation()
   const [getNewRecipe, {isLoading: newRecipeLoading} ] = useGetNewRecipeMutation()
+
+
+  const {data: allRecipes, isFetching: allRecipesFetching} = useGetAllRecipesQuery(["grapes"])
+
+  console.log(allRecipes)
 
   const navigate = useNavigate()
 
@@ -56,7 +61,8 @@ const MainPage: React.FC<{}> = ({}) => {
   }
 
   const handleNewRecipe = async () => {
-    const pow = await getNewRecipe("apple, carrots, orange, peas, steak").unwrap()
+    const pow = await getNewRecipe("apple, carrots, orange, peas, steak").unwrap().then(res => {return res}).catch(e => console.log(e))
+    console.log(pow)
   }
 
   return (

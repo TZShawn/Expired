@@ -21,9 +21,18 @@ export const recipeApi = createApi({
         }
       })
     }),
+    getAllRecipes: builder.query<any, any>({
+      query: (items) => ({
+        url: 'getrecipes',
+        method: 'POST',
+        body: {
+          "ingredients": items
+        }
+      })
+    })
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetNewRecipeMutation } = recipeApi
+export const { useGetNewRecipeMutation, useGetAllRecipesQuery } = recipeApi
