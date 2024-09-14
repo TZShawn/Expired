@@ -18,7 +18,7 @@ const MainPage: React.FC<{}> = ({}) => {
   const [getNewRecipe, {isLoading: newRecipeLoading} ] = useGetNewRecipeMutation()
 
 
-  const {data: allRecipes, isFetching: allRecipesFetching} = useGetAllRecipesQuery(["grapes"])
+  const {data: allRecipes, isFetching: allRecipesFetching} = useGetAllRecipesQuery(['carrots', 'orange', 'peas', 'steak'])
 
   console.log(allRecipes)
 
@@ -66,41 +66,40 @@ const MainPage: React.FC<{}> = ({}) => {
   }
 
   return (
-    <div className="w-screen h-screen overflow-hidden">
-      <div className="flex w-screen border-b-4">
-        <div>AAAA</div>
-        <div className="flex-1"></div>
-        <div className="bg-blue-100 px-4 py-3 border border-gray-400">Home</div>
-        <div onClick={(e) => navigate('/account')} className="bg-blue-100 px-2 py-3 border border-gray-400">
-          Account
-        </div>
-      </div>
+<div className="w-screen h-screen overflow-hidden flex flex-col">
+  <div className="flex items-center border-b-4 p-2">
+    <div className="flex-1 text-left">AAAA</div>
+    <div className="bg-blue-100 px-4 py-3 border border-gray-400 mx-2">Home</div>
+    <div onClick={() => navigate('/account')} className="bg-blue-100 px-4 py-3 border border-gray-400 cursor-pointer">
+      Account
+    </div>
+  </div>
 
-      <div className="mx-4 my-4 border border-b-2 flex">
-        <div className="w-1/3 border-2">
-          <ReactECharts className="w-2/3" option={options} />
-        </div>
-        <div className="w-1/3 h-full">
-          <div className="pt-2 text-lg font-bold">Recipes</div>
-          <div className="h-48 my-2 border-2">Recipes here</div>
-          <div className="flex w-full bg-red-500">
-            <div className="w-1/2 p-2 bg-green-400 text-center border-2">New List</div>
-            <div onClick={(e) => {handleNewRecipe()}} className="w-1/2 p-2 bg-green-400 text-center border-2">New Recipe</div>
-          </div>
-        </div>
-        <div className="w-1/3 h-full">
-          <div className="py-2 text-lg font-bold">Add new items sepereated by ','</div>
-          <textarea onChange={(e) => setNewGroceries(e.target.value)} className= "p-2 w-full h-48 border-2 border-gray-400" />
-          <div onClick={(e) => HandleSubmitClick()}className="bg-gray-200 p-2 border-2 border-gray-400 text-center hover:cursor-pointer text-lg font-semibold">
-            Submit
-          </div>
-        </div>
-      </div>
-
-      <div className="h-[50%] border border-gray-200 m-4 overflow-y-auto">
-        {!isFetching && data.fridge.map((item: any) => <FridgeItem name={item.name} expDate={item.expiry} />)}
+  <div className="flex flex-col lg:flex-row mx-4 my-4 border border-b-2">
+    <div className="w-full lg:w-1/3 border-2 p-2">
+      <ReactECharts className="w-full h-full" option={options} />
+    </div>
+    <div className="w-full lg:w-1/3 p-2">
+      <div className="pt-2 text-lg font-bold">Recipes</div>
+      <div className="h-48 my-2 border-2">Recipes here</div>
+      <div className="flex flex-col lg:flex-row w-full bg-red-500 mt-2">
+        <div className="w-full lg:w-1/2 p-2 bg-green-400 text-center border-2">New List</div>
+        <div onClick={handleNewRecipe} className="w-full lg:w-1/2 p-2 bg-green-400 text-center border-2 cursor-pointer">New Recipe</div>
       </div>
     </div>
+    <div className="w-full lg:w-1/3 p-2">
+      <div className="py-2 text-lg font-bold">Add new items separated by ','</div>
+      <textarea onChange={(e) => setNewGroceries(e.target.value)} className="p-2 w-full h-48 border-2 border-gray-400 resize-none" />
+      <div onClick={HandleSubmitClick} className="bg-gray-200 p-2 border-2 border-gray-400 text-center hover:cursor-pointer text-lg font-semibold mt-2">
+        Submit
+      </div>
+    </div>
+  </div>
+
+  <div className="flex-1 border border-gray-200 m-4 overflow-y-auto">
+    {!isFetching && data.fridge.map((item: any) => <FridgeItem key={item.name} name={item.name} expDate={item.expiry} />)}
+  </div>
+</div>
   );
 };
 

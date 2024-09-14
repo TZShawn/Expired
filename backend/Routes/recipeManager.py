@@ -22,6 +22,8 @@ recipe_bp = Blueprint("recipes", __name__)
 
 @recipe_bp.route("/getrecipes", methods=['POST'])
 def addRecipe():
+    ingredients = request.json["ingredients"]
+
     db = client["ExpiredDB"]
     collections = db["Recipes"]
 
@@ -29,7 +31,15 @@ def addRecipe():
     allRecipeCollection = []
     for recipe in allRecipes:
         recipe['_id'] = str(recipe['_id'])
-        allRecipeCollection.append(recipe)
+        
+        numberOfOwned = 0
+        for ing in ingredients:
+            print(ing.lower(), recipe['ingredients'])
+            if ing.lower() in recipe['ingredients']:
+                numberOfOwned += 1
+        
+        if (numberOfOwned / len(recipe['ingredients'])) * 100 > 50:
+            allRecipeCollection.append(recipe)
 
 
     return {"response": 200, "result": allRecipeCollection}
