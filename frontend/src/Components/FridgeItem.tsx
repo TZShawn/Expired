@@ -7,15 +7,21 @@ interface IFridgeItem {
 
 const FridgeItem: React.FC<IFridgeItem> = ({name, expDate}) => {
   return (
-    <div className='m-2 flex border-2 border-gray-600'>
-      <div className="flex-col m-2">
-        <div className="font-semibold font-lg">{name}</div>
-        <div className="text-sm text-gray-400 ">{expDate}</div>
-      </div>
-
-      <div className="flex-1" />
-      <div className="p-2 bg-red-600 m-2">Delete</div>
+  <div className="m-2 flex items-center border-2 border-gray-300 rounded-lg shadow-md p-4 bg-white">
+    <div className="flex flex-col">
+      <div className="text-lg font-semibold text-gray-700">{name}</div>
+      <div className="text-sm text-gray-500">Expires: {expDate}</div>
     </div>
+
+    <div className="flex-1" />
+
+    <div 
+      onClick={(e) => {console.log("Delete")}} 
+      className="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition"
+    >
+      Delete
+    </div>
+  </div>
   )
 }
 
