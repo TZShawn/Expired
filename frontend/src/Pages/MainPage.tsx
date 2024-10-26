@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Select } from "antd";
 
 import ReactECharts from "echarts-for-react";
@@ -14,11 +14,16 @@ import {
 } from "src/Services/recipes";
 
 const MainPage: React.FC<{}> = ({}) => {
+  const navigate = useNavigate();
+
   const [newGroceries, setNewGroceries] = useState<string>("");
 
   const userId = "shank";
 
   const { data, isFetching } = useGetFridgeDataQuery(userId);
+
+  const userDataFridge = data?.fridge.slice();
+  console.log(userDataFridge);
   const [updateUserFridge, { isLoading }] = useUpdateUserFridgeMutation();
   const [getNewRecipe, { isLoading: newRecipeLoading }] =
     useGetNewRecipeMutation();
@@ -26,17 +31,47 @@ const MainPage: React.FC<{}> = ({}) => {
   const { data: allRecipes, isFetching: allRecipesFetching } =
     useGetAllRecipesQuery(["carrots", "orange", "peas", "steak"]);
 
-  console.log(allRecipes);
+  const chartData = useMemo(() => {
+    const currentDate = new Date();
 
-  const navigate = useNavigate();
+    let expired = 0;
+    let almost = 0;
+    let good = 0;
+
+    userDataFridge.forEach((element: any) => {
+      const dateItem = new Date(element.expiry);
+      const daysTillExpire = dateItem.getDate() - currentDate.getDate();
+      if (daysTillExpire <= 0) {
+        ++expired;
+      } else if (daysTillExpire <= 2) {
+        ++almost;
+      } else {
+        ++good;
+      }
+    });
+
+    return [
+      { value: expired, name: "Expired" },
+      { value: almost, name: "Almost Expired" },
+      { value: good, name: "Not Expired" },
+    ];
+  }, [userDataFridge]);
 
   const options = {
     tooltip: {
       trigger: "item",
     },
+    legend: {
+      top: '35%',
+      right: '5%',
+      orient: 'vertical',
+      selectMode: false,
+      textStyle: {fontSize: 16},
+    },
     series: [
       {
-        name: "Access From",
+        color: ["#ee6666", "#fac858", "#91cc75"],
+        name: "fridge items",
         type: "pie",
         radius: ["30%", "50%"],
         avoidLabelOverlap: false,
@@ -47,13 +82,7 @@ const MainPage: React.FC<{}> = ({}) => {
         labelLine: {
           show: false,
         },
-        data: [
-          { value: 1048, name: "Search Engine" },
-          { value: 735, name: "Direct" },
-          { value: 580, name: "Email" },
-          { value: 484, name: "Union Ads" },
-          { value: 300, name: "Video Ads" },
-        ],
+        data: chartData,
       },
     ],
   };
@@ -119,7 +148,8 @@ const MainPage: React.FC<{}> = ({}) => {
 
       <div className="flex flex-col lg:flex-row gap-4 p-4">
         <div className="w-full lg:w-1/3 p-4 border-2 rounded-lg shadow-md">
-          <ReactECharts className="w-full h-full" option={options} />
+          <div className="text-xl font-semibold mb-4">Overview</div>
+          <ReactECharts className="-ml-16 w-full h-full" option={options} />
         </div>
 
         <div className="w-full lg:w-1/3 p-4 border-2 rounded-lg shadow-md">

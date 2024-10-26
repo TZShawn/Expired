@@ -15,7 +15,7 @@ const ProfileRecipeCard: React.FC<IProfileRecipeCard> = ({
   const remainingIngredientsCount = missingIngredients.length - 5;
 
   return (
-    <div className="border-2 border-gray-300 rounded-lg p-4 shadow-md bg-white mb-4">
+    <div className="border-2 border-gray-300 h-32 cursor-pointer rounded-lg p-4 shadow-md bg-white mb-4">
       <div className="text-lg font-semibold mb-2 text-gray-800">{name}</div>
 
       <div className="text-gray-600">
