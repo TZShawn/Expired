@@ -120,6 +120,18 @@ def replaceFridge():
 
     return {"response": 200, 'message': 'Fridge Cleared'}
 
+@fridge_bp.route("/updatesaved", methods=["POST"])
+def updateSaved():
+    body = request.json
+
+    db = client["ExpiredDB"]
+    collection = db["Accounts"]
+
+    document = collection.find_one({"username": body["username"]})
+    collection.update_one({"username": document["username"]}, {"$set": {"savedRecipes": body["recipeList"]}})
+
+    return {"response": 200, 'message': 'Fridge Cleared'}
+
 
 # @fridge_bp.route("/removeItem", methods=["POST"])
 # def clearFridge():

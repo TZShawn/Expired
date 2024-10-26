@@ -36,8 +36,19 @@ export const fridgeApi = createApi({
       }),
       invalidatesTags: ['Fridge']
     }),
+    updateUserFavs: builder.mutation<any, Record<string, any>>({
+      query: (items) => ({
+        url:'updatesaved',
+        method: 'POST',
+        body: {
+          "username": items.username,
+          "recipeList": items.recipeList
+        },
+      }),
+      invalidatesTags: ['Fridge']
+    }),
   }),
 })
 
 
-export const { useGetFridgeDataQuery, useUpdateUserFridgeMutation, useReplaceUserFridgeMutation } = fridgeApi
+export const { useGetFridgeDataQuery, useUpdateUserFridgeMutation, useReplaceUserFridgeMutation, useUpdateUserFavsMutation } = fridgeApi

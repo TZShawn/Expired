@@ -6,6 +6,7 @@ import FridgeItem from "../Components/FridgeItem";
 import { useNavigate } from "react-router-dom";
 import {
   useGetFridgeDataQuery,
+  useUpdateUserFavsMutation,
   useUpdateUserFridgeMutation,
 } from "src/Services/fridge";
 import {
@@ -15,14 +16,15 @@ import {
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
 
-const MainPage: React.FC<{}> = ({}) => {
+import CloseIcon from "@mui/icons-material/Close";
 
+const MainPage: React.FC<{}> = ({}) => {
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  if (userId == '') {
-    navigate('/')
+  if (userId == "") {
+    navigate("/");
   }
 
   const [newGroceries, setNewGroceries] = useState<string>("");
@@ -38,6 +40,7 @@ const MainPage: React.FC<{}> = ({}) => {
   }, [userData]);
 
   const [updateUserFridge] = useUpdateUserFridgeMutation();
+  const [updateUserFavs] = useUpdateUserFavsMutation();
   const [getNewRecipe] = useGetNewRecipeMutation();
 
   const { data: allRecipes, isFetching: allRecipesFetching } =
@@ -63,7 +66,6 @@ const MainPage: React.FC<{}> = ({}) => {
       const daysTillExpire = Math.floor(
         (dateItem.getTime() - currentDate.getTime()) / (1000 * 3600 * 24)
       );
-      console.log(element.name, daysTillExpire);
       if (daysTillExpire <= 0) {
         ++expired;
       } else if (daysTillExpire <= 2) {
@@ -139,7 +141,7 @@ const MainPage: React.FC<{}> = ({}) => {
           date.getFullYear(),
       };
     });
-    setNewGroceries("")
+    setNewGroceries("");
     updateUserFridge({ username: userId, newItems: formattedItems });
   };
 
@@ -150,8 +152,6 @@ const MainPage: React.FC<{}> = ({}) => {
         return res;
       })
       .catch((e) => console.log(e));
-
-    console.log(pow);
   };
 
   const handleRecipeClick = (recipe: any) => {
@@ -235,9 +235,9 @@ const MainPage: React.FC<{}> = ({}) => {
 
       <div className="flex-1 p-4 border-t-2 border-gray-200 overflow-y-auto">
         {!isFetching &&
-          userData.fridge.map((item: any) => (
+          userData.fridge.map((item: any, index: number) => (
             <FridgeItem
-              key={item.name}
+              key={index}
               name={item.name}
               expDate={item.expiry}
               userInformation={userInformation}
@@ -251,16 +251,16 @@ const MainPage: React.FC<{}> = ({}) => {
           <div className="bg-white p-6 rounded-lg max-w-4xl space-y-4 shadow-lg relative">
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
             >
-              &times;
+              <CloseIcon />
             </button>
             <div className="text-2xl font-semibold">
-              {modalDetails.recipeName}
+              {modalDetails?.recipeName}
             </div>
             <div className="text-gray-600 text-lg font-bold">Ingredients:</div>
             <div className="list-disc list-inside text-gray-700 space-y-1">
-              {modalDetails.ingredients?.map(
+              {modalDetails?.ingredients?.map(
                 (ingredient: string, index: number) => (
                   <div key={index}>{`- ${ingredient}`}</div>
                 )
@@ -269,9 +269,41 @@ const MainPage: React.FC<{}> = ({}) => {
 
             <div className="text-gray-600 font-bold text-lg">Recipe:</div>
             <div className="list-disc list-inside text-gray-700 space-y-1">
-              {modalDetails.cookingSteps?.map((step: string, index: number) => (
-                <div key={index}>{`${index + 1}: ${step}`}</div>
-              ))}
+              {modalDetails?.cookingSteps?.map(
+                (step: string, index: number) => (
+                  <div key={index}>{`${index + 1}: ${step}`}</div>
+                )
+              )}
+            </div>
+
+            <div className="flex justify-end pt-4">
+              <button
+                onClick={() => {
+                  let newUserInformation = JSON.parse(
+                    JSON.stringify(userInformation)
+                  );
+                  let recipeExist = newUserInformation.savedRecipes.findIndex(
+                    (rec: any) => rec === modalDetails._id
+                  );
+
+                  console.log(newUserInformation)
+                  if (recipeExist == -1) {
+                    newUserInformation.savedRecipes.push(modalDetails._id);
+                  } else {
+                    newUserInformation.savedRecipes.splice(recipeExist, 1);
+                  }
+
+                  console.log(newUserInformation)
+
+                  updateUserFavs({
+                    username: userId,
+                    recipeList: newUserInformation.savedRecipes,
+                  });
+                  setUserInformation(newUserInformation);
+                }} // Replace with your save function
+                className={"px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition"}
+              >Save Recipe
+              </button>
             </div>
           </div>
         </div>
