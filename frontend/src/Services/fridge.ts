@@ -8,9 +8,11 @@ const URL: string = "http://127.0.0.1:5000/"
 export const fridgeApi = createApi({
   reducerPath: 'fridgeApi',
   baseQuery: fetchBaseQuery({ baseUrl: URL }),
+  tagTypes: ['Fridge'],
   endpoints: (builder) => ({
     getFridgeData: builder.query<any, string>({
       query: (name) => `getuser?username=${name}`,
+      providesTags: ['Fridge']
     }),
     updateUserFridge: builder.mutation<any, Record<string, any>>({
       query: (items) => ({
@@ -19,12 +21,23 @@ export const fridgeApi = createApi({
         body: {
           "username": items.username,
           "newItems": items.newItems
-        }
-      })
+        },
+      }),
+      invalidatesTags: ['Fridge']
+    }),
+    replaceUserFridge: builder.mutation<any, Record<string, any>>({
+      query: (items) => ({
+        url:'replacefridge',
+        method: 'POST',
+        body: {
+          "username": items.username,
+          "newFridge": items.newFridge
+        },
+      }),
+      invalidatesTags: ['Fridge']
     }),
   }),
 })
 
-// Export hooks for usage in functional components, which are
-// auto-generated based on the defined endpoints
-export const { useGetFridgeDataQuery, useUpdateUserFridgeMutation } = fridgeApi
+
+export const { useGetFridgeDataQuery, useUpdateUserFridgeMutation, useReplaceUserFridgeMutation } = fridgeApi

@@ -29,7 +29,7 @@ const AccountPage: React.FC<{}> = ({}) => {
           >
             Home
           </div>
-          <div className="bg-blue-100 px-4 py-2 border border-gray-400 rounded-lg">
+          <div className="bg-blue-400 px-4 py-2 border border-gray-400 rounded-lg">
             Account
           </div>
         </div>

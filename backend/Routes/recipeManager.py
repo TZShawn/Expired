@@ -74,8 +74,7 @@ def addFridge():
     # messageContent = json.loads(completionStr)
     messageContent = json.loads(completion.choices[0].message.content)
 
-
     collection.insert_one(messageContent)
     messageContent['_id'] = str(messageContent['_id'])
 
-    return {"response": 200, "fridge": jsonify(messageContent)}
+    return {"response": 200, "fridge": messageContent}
